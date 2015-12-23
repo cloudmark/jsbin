@@ -1,5 +1,4 @@
 try {
-  jsbin.settings.font = 23;
   console.log('Dave is ready.');
 } catch (e) {
   window.console = {
@@ -207,7 +206,10 @@ if (!storedSettings && (location.origin + location.pathname) === jsbin.root + '/
 
 if (!jsbin.settings.editor) {
   // backward compat with jsbin-v2
-  jsbin.settings.editor = {};
+  jsbin.settings.editor = {
+    theme: 'solarized light'
+  };
+  jsbin.settings.font = 23;
 }
 
 if (jsbin.settings.codemirror) {
