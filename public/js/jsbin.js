@@ -1,4 +1,5 @@
 try {
+  jsbin.settings.font = 23;
   console.log('Dave is ready.');
 } catch (e) {
   window.console = {
