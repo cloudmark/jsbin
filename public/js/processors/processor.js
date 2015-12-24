@@ -579,31 +579,36 @@ var processors = jsbin.processors = (function () {
 
       function workerMsgHandler() {
         window.addEventListener('message', function(event) {
-          var message = JSON.parse(event.data);
+          if (event.data.indexOf('{') != -1 && event.data.indexOf('}') != -1) {
+            var message = JSON.parse(event.data);
 
-          if (message.type === 'eval') {
-            jsbin_cljs.core.eval_expr(
-              '(ns cljs.user)' + message.source,
-              function(err, result) {
-                cljs.user = null;
-                if (err) {
-                  throw Error(err);
-                } else {
-                  parent.postMessage(JSON.stringify({
-                    type: 'eval',
-                    result: '"' + eval(result) + '"'
-                  }), '*');
-                }
-              });
+            if (message.type === 'eval') {
+              jsbin_cljs.core.eval_expr(
+                '(ns cljs.user)' + message.source,
+                function (err, result) {
+                  cljs.user = null;
+                  if (err) {
+                    throw Error(err);
+                  } else {
+                    parent.postMessage(JSON.stringify({
+                      type: 'eval',
+                      result: '"' + eval(result) + '"'
+                    }), '*');
+                  }
+                });
+            }
           }
         }, false);
       }
 
       window.addEventListener('message', function(event) {
-        var message = JSON.parse(event.data);
+        // Some guarantee that it is at least some kind of json.
+        if (event.data.indexOf('{') != -1 && event.data.indexOf('}') != -1) {
+          var message = JSON.parse(event.data);
 
-        if (message.type === 'eval') {
-          resolveWorker('console.log('+message.result+')');
+          if (message.type === 'eval') {
+            resolveWorker('console.log(' + message.result + ')');
+          }
         }
       }, false);
 
